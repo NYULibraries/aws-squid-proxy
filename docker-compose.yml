@@ -1,0 +1,10 @@
+version: '3.2'
+services:
+  squid:
+    build: .
+    ports:
+      - "3128:3128"
+    volumes:
+      - ./cache:/var/spool/squid
+      - ./logs:/var/log/squid
+      - ./users:/etc/squid/users

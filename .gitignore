@@ -1,0 +1,12 @@
+logs/*
+cache/*
+users/*
+!logs/.gitkeep
+!cache/.gitkeep
+!users/.gitkeep
+*/.terraform
+*.tfstate
+*.tfstate.*
+*/squid_ec2*
+passwd
+ips

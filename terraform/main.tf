@@ -19,7 +19,6 @@ resource "aws_instance" "squid_instance" {
       "DEBIAN_FRONTEND=noninteractive sudo apt -yq install squid",
       "sudo mkdir -p /squid3/logs",
       "sudo mkdir -p /squid3/conf",
-      "sudo mkdir -p /squid3/users",
       "sudo chown -R ubuntu:ubuntu /squid3"
     ]
 
@@ -33,17 +32,6 @@ resource "aws_instance" "squid_instance" {
   provisioner "file" {
     source      = "conf/squid.conf"
     destination = "/squid3/conf/squid.conf"
-
-    connection {
-      type          = "ssh"
-      user          = "ubuntu"
-      private_key   = "${file("./squid_ec2")}"
-    }
-  }
-
-  provisioner "file" {
-    source      = "users/passwd"
-    destination = "/squid3/users/passwd"
 
     connection {
       type          = "ssh"

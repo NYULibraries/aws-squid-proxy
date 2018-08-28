@@ -14,6 +14,7 @@ Bring up the proxy server and test it:
 
 ```
 docker-compose up squid
-export http_proxy=http://127.0.0.1:3128
+export http_proxy=http://proxy:passw0rd@127.0.0.1:3128
+# OR
 curl -x http://proxy:passw0rd@127.0.0.1:3128 http://example.org
 ```

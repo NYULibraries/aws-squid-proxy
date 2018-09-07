@@ -16,10 +16,8 @@ resource "aws_instance" "squid_instance" {
   provisioner "remote-exec" {
     inline = [
       "set -e",
-      "DEBIAN_FRONTEND=noninteractive sudo apt -yq install squid",
-      "sudo mkdir -p /squid3/logs",
-      "sudo mkdir -p /squid3/conf",
-      "sudo chown -R ubuntu:ubuntu /squid3"
+      "DEBIAN_FRONTEND=noninteractive RUNLEVEL=1 sudo apt-get -yq install squid",
+      "sudo chown -R ubuntu:ubuntu /etc/squid"
     ]
 
     connection {
@@ -31,7 +29,7 @@ resource "aws_instance" "squid_instance" {
 
   provisioner "file" {
     source      = "conf/squid.conf"
-    destination = "/squid3/conf/squid.conf"
+    destination = "/etc/squid/squid.conf"
 
     connection {
       type          = "ssh"
@@ -42,20 +40,13 @@ resource "aws_instance" "squid_instance" {
 
   provisioner "remote-exec" {
     inline = [
+      "set -e",
+      "sudo mkdir -p /squid3/logs",
+      "sudo chmod 755 /squid3/logs",
+      "sudo chown -R proxy:proxy /etc/squid",
       "sudo chown -R proxy:proxy /squid3",
-      "sudo chmod -R 755 /squid3",
-      "sudo chmod -R 644 /squid3/conf/squid.conf"
+      "sudo service squid restart"
     ]
-
-    connection {
-      type          = "ssh"
-      user          = "ubuntu"
-      private_key   = "${file("./squid_ec2")}"
-    }
-  }
-
-  provisioner "remote-exec" {
-    script = "./start-squid.sh"
 
     connection {
       type          = "ssh"
